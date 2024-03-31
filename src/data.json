@@ -1,0 +1,81 @@
+[
+  {
+    "uuid": "8271dc34162d4657be1a67b5d8a4473b",
+    "name": "Baseboard Temp",
+    "type": "IPMI",
+    "key": "baseboard_temp",
+    "history": "1w",
+    "value_type": "FLOAT",
+    "units": "C",
+    "ipmi_sensor": "Baseboard Temp",
+    "tags": [
+      {
+        "tag": "component",
+        "value": "system"
+      },
+      {
+        "tag": "component",
+        "value": "temperature"
+      }
+    ],
+    "triggers": [
+      {
+        "uuid": "2e1ee68913a34cb78f31d5001f10793d",
+        "expression": "last(/Intel SR1630 IPMI/baseboard_temp)<5 or last(/Intel SR1630 IPMI/baseboard_temp)>90",
+        "name": "Baseboard Temp Critical [{ITEM.VALUE}]",
+        "priority": "DISASTER",
+        "dependencies": [
+          {
+            "name": "Power",
+            "expression": "last(/Intel SR1630 IPMI/power)=0"
+          }
+        ],
+        "tags": [
+          {
+            "tag": [
+              {
+                "tag": "scope",
+                "value": "availability"
+              },
+              {
+                "tag": "scope",
+                "value": "performance"
+              }
+            ],
+            "value": "availability"
+          },
+          {
+            "tag": "scope",
+            "value": "performance"
+          }
+        ]
+      },
+      {
+        "uuid": "c51b207bcbd041039a1f5a1a7973e262",
+        "expression": "last(/Intel SR1630 IPMI/baseboard_temp)<10 or last(/Intel SR1630 IPMI/baseboard_temp)>83",
+        "name": "Baseboard Temp Non-Critical [{ITEM.VALUE}]",
+        "priority": "HIGH",
+        "dependencies": [
+          {
+            "name": "Baseboard Temp Critical [{ITEM.VALUE}]",
+            "expression": "last(/Intel SR1630 IPMI/baseboard_temp)<5 or last(/Intel SR1630 IPMI/baseboard_temp)>90"
+          },
+          {
+            "name": "Power",
+            "expression": "last(/Intel SR1630 IPMI/power)=0"
+          }
+        ],
+        "tags": [
+          {
+            "tag": "scope",
+            "value": "availability"
+          },
+          {
+            "tag": "scope",
+            "value": "performance"
+          }
+        ]
+      }
+    ]
+  }
+]
